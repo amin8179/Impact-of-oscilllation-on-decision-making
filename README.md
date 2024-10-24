@@ -1,4 +1,4 @@
-#README for Neural Decision-Making Model Simulations
+README for Neural Decision-Making Model Simulations
 
 
 Overview
