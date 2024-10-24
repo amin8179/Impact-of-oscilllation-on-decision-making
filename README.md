@@ -106,4 +106,3 @@ By using these files, you can simulate how neural populations respond to varying
 
 
 
-ChatGPT can make mistakes. Check important info.
