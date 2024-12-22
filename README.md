@@ -2,7 +2,7 @@
 
 
 **Overview**
-This project simulates neural decision-making processes using two different network models (Network A and Network B). Each model is simulated over multiple trials, varying evidence qualities (input stimulus amplitudes) and phase differences between inputs. The scripts employ Euler's method to solve systems of differential equations that represent the dynamics of neuron populations. The goal is to simulate decision and error trials and analyze reaction times, accuracy, and other neural outputs.
+This project simulates neural decision-making processes using two different network models (Network A and Network B). Each model is simulated over multiple trials, varying evidence qualities (input stimulus amplitudes) and phase differences between inputs. The scripts employ Euler's method to solve systems of differential equations that represent the dynamics of neuron populations. The goal is to simulate correct and error trials and analyze decision times, accuracy, and other neural outputs.
 
 **File Descriptions**
 
@@ -13,8 +13,10 @@ Inputs:
 num_trials: Number of trials for the simulation.
 fs: Sampling frequency.
 decision_boundary: Threshold for decision-making.
-a1: Amplitude for the first Gaussian bump (input stimulus).
-a2: Amplitude for the sine wave inputs (external stimuli).
+a1: Amplitude of the Gaussian bump (input stimulus) to column 1.
+a2: Amplitude for the sine wave inputs (oscillatory input).
+a3: Amplitude of the Gaussian bump (input stimulus) to column 2
+
 f2: Frequency for the sine wave inputs.
 phi: Phase shift for one of the sine wave inputs.
 Outputs:
@@ -27,7 +29,7 @@ This script simulates Network B. It follows a similar structure to fsm_A.m, with
 Inputs:
 Same structure as fsm_A.m.
 Outputs:
-Similar to fsm_A.m, providing reaction times, decision indices, and accuracy metrics.
+Similar to fsm_A.m, providing decision times, decision indices, and accuracy metrics.
 
 
 **3. main_A.m**
@@ -36,7 +38,7 @@ This script is used to run simulations for Network A over multiple trials. It lo
 Key parameters:
 num_trials = 3000: Number of trials per simulation.
 fs = 1000: Sampling frequency.
-decision_boundary1 = 0.005: Threshold for decision-making.
+decision_boundary1 = 0.026: Threshold for decision-making.
 a_values = 0.1:0.025:0.35: Range of evidence quality values.
 phi = 0:pi/4:pi: Phase differences for the sine wave inputs.
 
@@ -72,7 +74,7 @@ Analyze outputs: After running, the decision times, accuracy metrics, and other 
 **Dependencies**
 
 MATLAB R2018b or later.
-The model33 and movingAverage functions must be present in the working directory.
+The model33 function must be present in the working directory.
 
 
 
@@ -80,7 +82,7 @@ Notes
 Ensure that the functions model33.m is available, as it is essential for simulating neural activity and processing the outputs.
 Adjust the decision_boundary and noise parameters to suit different decision-making scenarios.
 
-By using these files, you can simulate how neural populations respond to varying inputs, analyze decision and error trials, and explore neural decision-making mechanisms.
+By using these files, you can simulate how neural populations respond to varying inputs, analyze correct and error trials, and explore neural decision-making mechanisms.
 
 
 
