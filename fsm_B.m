@@ -28,13 +28,13 @@ function [acc,decision_reaction_times,error_reaction_times,decision_trial_indice
 
     Ae = 3.25;           % Excitatory synaptic gain
     Ai = 22;             % Inhibitory synaptic gain
-    a1e = 10;           % Time constant for excitatory population
-    a1i = 100;             % Time constant for inhibitory population
+    a1e = 10;           % 1/Time constant for excitatory population
+    a1i = 100;             % 1/Time constant for inhibitory population
     cL21 = 0.85;            % Coupling from population 2 to 1
     cL12 = 0.85;            % Coupling from population 1 to 2
     cLi21 = 50;          % Inhibitory coupling from 2 to 1
     cLi12 = 50;          % Inhibitory coupling from 1 to 2
-    c1 = 0.15;            % Coupling parameters 
+    c1 = 0.15;            % Coupling parameters (intrinsic connections)
     c2 = 0.1;
     c3 = 32;
     c4 = 55;
@@ -101,7 +101,7 @@ decision_boundaries1=0.08;     % Decision boundary for classification
         decay2(t < f) = 0;
         bump2 = max([rise2; sustain2; decay2]);
 
-        % Initialize lists to store trial indices and reaction times
+        % Initialize lists to store trial indices and decision times
         decision_trial_indices = [];
         error_trial_indices = [];
         non_decision_trial_indices = [];
