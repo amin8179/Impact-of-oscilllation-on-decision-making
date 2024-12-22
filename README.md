@@ -57,7 +57,7 @@ This file contains the model33 function, which defines the system of differentia
 
 Key Components:
 State variables (x1, x2, etc.): Represent different neural populations.
-Inputs (bump1, bump2, y1, y2): External inputs to the model (Gaussian bumps and sine waves).
+Inputs(bump1, bump2, y1, y2): Stimulus and oscillatory inputs to the model (Gaussian bumps and sine waves).
 Noise: Random noise affecting the neural dynamics.
 Differential Equations: Represent the change in neural activity over time.
 
