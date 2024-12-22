@@ -1,6 +1,6 @@
 % Simulation of network A
-function [acc, decision_reaction_times, error_reaction_times, decision_trial_indicesa, error_trial_indicesa, non_decision_trial_indicesa, avg_decision_rts, avg_error_rts, x2_thr, x17_thr, x2_thre, x17_thre, std_decision_rts, std_error_rts, o1_e1, o2_e1, input_1, input_2] = fsm_A(num_trials, fs, decision_boundary, a1, a2, f2, phi)
-    % This function simulates a neural decision-making model over multiple trials.
+function [acc,decision_reaction_times,error_reaction_times,decision_trial_indicesa,error_trial_indicesa,non_decision_trial_indicesa,avg_decision_rts,avg_error_rts,x2_thr,x17_thr,x2_thre,x17_thre,std_decision_rts,std_error_rts, o1_e1,o2_e1,input_1,input_2]=fsm_A(num_trials,fs,decision_boundary,a1,a2,f2,phi,a3)
+  % This function simulates a neural decision-making model over multiple trials.
     % Inputs:
     %   num_trials           - Number of simulation trials
     %   fs                   - Sampling frequency
@@ -27,33 +27,36 @@ function [acc, decision_reaction_times, error_reaction_times, decision_trial_ind
     %   input_1, input_2             - Input stimuli used in the simulation
 
     % Decision boundary for classification
-    decision_boundary1 = 0.004;
-
-    % Model parameters
-    k = 100;             % Window size for moving average
     Ae = 3.25;           % Excitatory synaptic gain
     Ai = 22;             % Inhibitory synaptic gain
-    a1e = 200;           % Time constant for excitatory population
-    a1i = 5;             % Time constant for inhibitory population
-    cL21 = 1;            % Coupling from population 2 to 1
-    cL12 = 1;            % Coupling from population 1 to 2
-    cLi21 = 55;          % Inhibitory coupling from 2 to 1
-    cLi12 = 55;          % Inhibitory coupling from 1 to 2
-    c1 = 0.1;            % Coupling parameters (unspecified)
+    a1e = 100;           % Time constant for excitatory population
+    a1i = 2;             % Time constant for inhibitory population
+    cL21 = 0.7;            % Coupling from population 2 to 1
+    cL12 = 0.7;            % Coupling from population 1 to 2
+    cLi21 = 30;          % Inhibitory coupling from 2 to 1
+    cLi12 = 30;          % Inhibitory coupling from 1 to 2
+    c1 =0.1;            % Coupling parameters (unspecified)
     c2 = 0.1;
-    c3 = 20;
-    c4 = 1;
-    c5 = 1;
-    c6 = 0.1;
-    c7 = 1;
+    c3 = 8;
+    c4 = 5;
+    c5 = 0.3;
+    c6 = 1;
+    c7 = 105;
     I0E1 = 0.3255;       % Baseline input current for population 1
     I0E2 = 0.3255;       % Baseline input current for population 2
-    noise_amp = 10;      % Amplitude of noise
-    tampa = 5 / 1000;    % Time constant for adaptation
-    f = 4;               % Frequency parameter for stimuli
+    noise_amp = 2;      % Amplitude of noise
 
-    % Time vector setup
-    t = linspace(0, 5, 5 * fs);  % Simulate from 0 to 5 seconds
+
+
+
+
+    tampa = 5/1000;
+    f = 3;
+decision_boundaries1=0.01;
+    %decision_boundaries1=0.003;
+  
+    % Time vector
+    t = linspace(0, 4, 4*fs);
 
     % Parameters for Gaussian bumps
     b = 1;               % Center of the Gaussian bump
@@ -74,11 +77,14 @@ function [acc, decision_reaction_times, error_reaction_times, decision_trial_ind
     tmax = 5;
 
     % Generate external sine wave inputs with phase shift
-    y1 = a2 .* sin(2 .* pi .* f2 .* t + phi);  % Sine wave with phase shift
-    y2 = a2 .* sin(2 .* pi .* f2 .* t);        % Sine wave without phase shift
+    y1 = a2 .* sin(2 .* pi .* f2 .* t);  % Sine wave with phase shift
+    y2 = a2 .* sin(2 .* pi .* f2 .* t+ phi);        % Sine wave without phase shift
 
     % Loop over different 'a' values (here, only one value a1)
-    a_values = a1;
+  a_values = (a1);
+  a1_values = (a3);
+
+
     for a_idx = 1:length(a_values)
         a = a_values(a_idx);  % Amplitude for the first Gaussian bump
 
@@ -92,7 +98,7 @@ function [acc, decision_reaction_times, error_reaction_times, decision_trial_ind
         bump1 = max([rise1; sustain1; decay1]);
 
         % Construct the second Gaussian bump (stimulus) for population 2
-        amplitude_bump2 = 0.1;
+        amplitude_bump2 = a1_values(a_idx);
         rise2 = amplitude_bump2 * exp(-((t - b).^2) / (2 * c^2));
         rise2(t > b) = 0;
         sustain2 = zeros(size(t));
@@ -141,49 +147,31 @@ function [acc, decision_reaction_times, error_reaction_times, decision_trial_ind
             output1_EEG(trial, :) = X(:, 2)' - X(:, 3)' + X(:, 7)';
             output2_EEG(trial, :) = X(:, 17)' - X(:, 18)' + X(:, 22)';
 
-            % Define the analysis window from t = 1s to t = 4s
-            start_idx = find(t >= 1, 1, 'first');
-            end_idx = find(t <= 4, 1, 'last');
+        X1=X(:, 1)';
+        X2=X(:, 15)';
 
-            % Extract state variables x2 and x17 within the analysis window
-            x22 = X(start_idx:end_idx + 1, 1);
-            x177 = X(start_idx:end_idx + 1, 15);
+        X1=X1';
+        X2=X2';
 
-            % Smooth the signals using a moving average
-            x2 = movingAverage(x22, k);
-            x17 = movingAverage(x177, k);
 
-            % Determine the trend of x2 and x17
-            x2_trend = sign(x2(end) - x2(1));
-            x17_trend = sign(x17(end) - x17(1));
+        % Analyze segments of x2 and x17 within the specified time window
+        start_idx = find(t >= 1, 1, 'first');
+        end_idx = find(t <= f, 1, 'last');
+        x2 = X1(start_idx:end_idx + 1,1);
+        x17 = X2(start_idx:end_idx + 1,1);
 
-            % Classify the trial based on the trends and thresholds
-            if x2_trend == 1 && x17_trend == 1
-                % Both signals increasing
-                if max(x2) >= decision_boundary && max(x2) - max(x17) >= decision_boundary1
-                    decision_trial_indices = [decision_trial_indices, trial];
-                elseif max(x17) >= decision_boundary && max(x17) - max(x2) >= decision_boundary1
-                    error_trial_indices = [error_trial_indices, trial];
-                else
-                    non_decision_trial_indices = [non_decision_trial_indices, trial];
-                end
-            elseif x2_trend == -1 && x17_trend == -1
-                % Both signals decreasing
+        % Determine trends and classify the trial
+
+
+        % Classification logic as per Python code
+      
+            % Both increasing
+            if max(x2) >= max(x17) && abs(max(abs(x2)) - max(abs(x17))) >= decision_boundaries1
+                decision_trial_indices = [decision_trial_indices, trial];
+            elseif max(x17) >= max(x2) && abs(max(abs(x17)) - max(abs(x2))) >= decision_boundaries1
+                error_trial_indices = [error_trial_indices, trial];
+            else
                 non_decision_trial_indices = [non_decision_trial_indices, trial];
-            elseif x2_trend == 1 && x17_trend == -1
-                % x2 increasing, x17 decreasing
-                if max(x2) >= decision_boundary && max(x2) - max(x17) >= decision_boundary1
-                    decision_trial_indices = [decision_trial_indices, trial];
-                else
-                    non_decision_trial_indices = [non_decision_trial_indices, trial];
-                end
-            elseif x2_trend == -1 && x17_trend == 1
-                % x2 decreasing, x17 increasing
-                if max(x17) >= decision_boundary && max(x17) - max(x2) >= decision_boundary1
-                    error_trial_indices = [error_trial_indices, trial];
-                else
-                    non_decision_trial_indices = [non_decision_trial_indices, trial];
-                end
             end
         end
 
@@ -206,8 +194,8 @@ function [acc, decision_reaction_times, error_reaction_times, decision_trial_ind
             x22 = X(:, 1);
             x177 = X(:, 15);
 
-            x2 = movingAverage(x22, k);
-            x17 = movingAverage(x177, k);
+            x2 = x22;
+            x17 = x177;
 
             % Find the reaction time when x2 crosses the decision boundary
             rt_indices = find(x2 > decision_boundary, 1, 'first');
@@ -236,8 +224,8 @@ function [acc, decision_reaction_times, error_reaction_times, decision_trial_ind
             x22 = X(:, 1);
             x177 = X(:, 15);
 
-            x2 = movingAverage(x22, k);
-            x17 = movingAverage(x177, k);
+            x2 = x22;
+            x17 = x177;
 
             % Find the reaction time when x17 crosses the decision boundary
             rt_indices = find(x17 > decision_boundary, 1, 'first');
@@ -280,4 +268,4 @@ function [acc, decision_reaction_times, error_reaction_times, decision_trial_ind
     end
 end
 
-% Note: The functions 'model33' and 'movingAverage' are assumed to be defined elsewhere in your codebase.
+% Note: The functions 'model33' is assumed to be defined elsewhere in your codebase.
