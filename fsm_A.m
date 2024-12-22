@@ -28,13 +28,13 @@ function [acc,decision_reaction_times,error_reaction_times,decision_trial_indice
 
     Ae = 3.25;           % Excitatory synaptic gain
     Ai = 22;             % Inhibitory synaptic gain
-    a1e = 100;           % Time constant for excitatory population
-    a1i = 2;             % Time constant for inhibitory population
+    a1e = 100;           % 1/Time constant for excitatory population
+    a1i = 2;             % 1/Time constant for inhibitory population
     cL21 = 0.7;            % Coupling from population 2 to 1
     cL12 = 0.7;            % Coupling from population 1 to 2
     cLi21 = 30;          % Inhibitory coupling from 2 to 1
     cLi12 = 30;          % Inhibitory coupling from 1 to 2
-    c1 =0.1;            % Coupling parameters 
+    c1 =0.1;            % Coupling parameters (intrinsic connections)
     c2 = 0.1;
     c3 = 8;
     c4 = 5;
