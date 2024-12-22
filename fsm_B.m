@@ -5,8 +5,9 @@ function [acc,decision_reaction_times,error_reaction_times,decision_trial_indice
     %   num_trials           - Number of simulation trials
     %   fs                   - Sampling frequency
     %   decision_boundary    - Threshold for decision-making
-    %   a1                   - Amplitude for the first Gaussian bump (input stimulus)
+    %   a1                   - Amplitude of the Gaussian bump (input stimulus) to column 1
     %   a2                   - Amplitude for the sine wave inputs (external stimuli)
+    %   a3                   - Amplitude of the Gaussian bump (input stimulus) to column 2
     %   f2                   - Frequency for the sine wave inputs
     %   phi                  - Phase shift for one of the sine wave inputs
     %
