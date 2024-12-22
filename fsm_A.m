@@ -74,7 +74,7 @@ decision_boundaries1=0.01;     % Decision boundary for classification
     y1 = a2 .* sin(2 .* pi .* f2 .* t);  % Sine wave inputs to column 1
     y2 = a2 .* sin(2 .* pi .* f2 .* t+ phi);       % Sine wave inputs to column 2
 
-    % Loop over different 'a' values (here, only one value a1)
+    % Loop over different 'a' values 
   a_values = (a1);
   a1_values = (a3);
 
@@ -101,7 +101,7 @@ decision_boundaries1=0.01;     % Decision boundary for classification
         decay2(t < f) = 0;
         bump2 = max([rise2; sustain2; decay2]);
 
-        % Initialize lists to store trial indices and reaction times
+        % Initialize lists to store trial indices and decision times
         decision_trial_indices = [];
         error_trial_indices = [];
         non_decision_trial_indices = [];
