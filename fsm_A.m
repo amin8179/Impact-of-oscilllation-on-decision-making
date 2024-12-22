@@ -5,24 +5,25 @@ function [acc,decision_reaction_times,error_reaction_times,decision_trial_indice
     %   num_trials           - Number of simulation trials
     %   fs                   - Sampling frequency
     %   decision_boundary    - Threshold for decision-making
-    %   a1                   - Amplitude for the first Gaussian bump (input stimulus)
-    %   a2                   - Amplitude for the sine wave inputs (external stimuli)
+    %   a1                   - Amplitude of the Gaussian bump (input stimulus) to column 1
+    %   a2                   - Amplitude for the sine wave inputs (oscillatory input)
+    %   a3                   - Amplitude of the Gaussian bump (input stimulus) to column 2
     %   f2                   - Frequency for the sine wave inputs
     %   phi                  - Phase shift for one of the sine wave inputs
     %
     % Outputs:
     %   acc                          - Accuracy percentage across trials
-    %   decision_reaction_times      - Reaction times for decision trials
+    %   decision_reaction_times      - Decision times for correct trials
     %   error_reaction_times         - Reaction times for error trials
-    %   decision_trial_indicesa      - Indices of decision trials
+    %   decision_trial_indicesa      - Indices of correct trials
     %   error_trial_indicesa         - Indices of error trials
     %   non_decision_trial_indicesa  - Indices of non-decision trials
-    %   avg_decision_rts             - Average reaction time for decision trials
+    %   avg_decision_rts             - Average reaction time for correct trials
     %   avg_error_rts                - Average reaction time for error trials
-    %   x2_thr, x17_thr              - Threshold values at reaction time for decision trials
+    %   x2_thr, x17_thr              - Threshold values at reaction time for correct trials
     %   x2_thre, x17_thre            - Threshold values at reaction time for error trials
-    %   std_decision_rts             - Standard deviation of decision reaction times
-    %   std_error_rts                - Standard deviation of error reaction times
+    %   std_decision_rts             - Standard deviation of correct decision times
+    %   std_error_rts                - Standard deviation of error decision times
     %   o1_e1, o2_e1                 - Outputs from specific neurons in the model
     %   input_1, input_2             - Input stimuli used in the simulation
 
