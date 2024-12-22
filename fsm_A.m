@@ -159,12 +159,10 @@ decision_boundaries1=0.01;     % Decision boundary for classification
         x2 = X1(start_idx:end_idx + 1,1);
         x17 = X2(start_idx:end_idx + 1,1);
 
-        % Determine trends and classify the trial
-
+        % Classify the trials
 
         % Classification logic as per Python code
-      
-            % Both increasing
+
             if max(x2) >= max(x17) && abs(max(abs(x2)) - max(abs(x17))) >= decision_boundaries1
                 decision_trial_indices = [decision_trial_indices, trial];
             elseif max(x17) >= max(x2) && abs(max(abs(x17)) - max(abs(x2))) >= decision_boundaries1
@@ -179,24 +177,24 @@ decision_boundaries1=0.01;     % Decision boundary for classification
         error_trial_indicesa = error_trial_indices;
         non_decision_trial_indicesa = non_decision_trial_indices;
 
-        % Calculate reaction times for decision trials
+        % Calculate decision times for correct trials
         for trial_idx = 1:length(decision_trial_indices)
             trial = decision_trial_indices(trial_idx);
             rng(trial);
 
-            % Re-simulate the trial to get accurate reaction times
+            % Re-simulate the trial to get accurate decision times
             X = zeros(length(t), length(X0));
             X(1, :) = X0;
             for i = 1:length(t) - 1
                 X(i + 1, :) = X(i, :) + dt * model33(X(i, :), i, bump1, bump2, y1, y2, noise_amp, tampa, Ae, Ai, a1e, a1i, cL21, cL12, cLi21, cLi12, c1, c2, c3, c4, c5, c6, c7);
             end
-            x22 = X(:, 1);
-            x177 = X(:, 15);
+            x22 = X(:, 1);  %EPSP of neuron e1 in column 1
+            x177 = X(:, 15);%EPSP of neuron e1 in column 2 
 
             x2 = x22;
             x17 = x177;
 
-            % Find the reaction time when x2 crosses the decision boundary
+            % Find the decision time when x2 crosses the decision boundary
             rt_indices = find(x2 > decision_boundary, 1, 'first');
             if ~isempty(rt_indices)
                 first_rt = t(rt_indices);
@@ -209,12 +207,12 @@ decision_boundaries1=0.01;     % Decision boundary for classification
             end
         end
 
-        % Calculate reaction times for error trials
+        % Calculate decision times for error trials
         for trial_idx = 1:length(error_trial_indices)
             trial = error_trial_indices(trial_idx);
             rng(trial);
 
-            % Re-simulate the trial to get accurate reaction times
+            % Re-simulate the trial to get accurate decision times
             X = zeros(length(t), length(X0));
             X(1, :) = X0;
             for i = 1:length(t) - 1
@@ -226,7 +224,7 @@ decision_boundaries1=0.01;     % Decision boundary for classification
             x2 = x22;
             x17 = x177;
 
-            % Find the reaction time when x17 crosses the decision boundary
+            % Find the decision time when x17 crosses the decision boundary
             rt_indices = find(x17 > decision_boundary, 1, 'first');
             if ~isempty(rt_indices)
                 first_rt = t(rt_indices);
@@ -239,7 +237,7 @@ decision_boundaries1=0.01;     % Decision boundary for classification
             end
         end
 
-        % Calculate average reaction times and standard deviations
+        % Calculate average decision times and standard deviations
         if ~isempty(decision_reaction_times)
             avg_decision_rt = mean(decision_reaction_times, 'omitnan');
             std_decision_rt = std(decision_reaction_times, 'omitnan') / sqrt(length(decision_reaction_times));
@@ -256,7 +254,7 @@ decision_boundaries1=0.01;     % Decision boundary for classification
             std_error_rt = NaN;
         end
 
-        % Store the reaction times and accuracies
+        % Store the decision times and accuracies
         avg_decision_rts(a_idx) = avg_decision_rt;
         avg_error_rts(a_idx) = avg_error_rt;
         std_decision_rts(a_idx) = std_decision_rt;
