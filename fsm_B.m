@@ -70,14 +70,11 @@ decision_boundaries1=0.08;     % Decision boundary for classification
     std_decision_rts = [];
     std_error_rts = [];
 
-    % Maximum time for stimuli
-    tmax = 5;
-
     % Generate external sine wave inputs with phase shift
     y1 = a2 .* sin(2 .* pi .* f2 .* t);  % Sine wave inputs to column 1
     y2 = a2 .* sin(2 .* pi .* f2 .* t+ phi);       % Sine wave inputs to column 2
 
-    % Loop over different 'a' values (here, only one value a1)
+    % Loop over different 'a' values 
   a_values = (a1);
   a1_values = (a3);
 
