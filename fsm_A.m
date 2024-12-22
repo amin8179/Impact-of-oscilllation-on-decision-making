@@ -26,7 +26,6 @@ function [acc,decision_reaction_times,error_reaction_times,decision_trial_indice
     %   o1_e1, o2_e1                 - Outputs from specific neurons in the model
     %   input_1, input_2             - Input stimuli used in the simulation
 
-    % Decision boundary for classification
     Ae = 3.25;           % Excitatory synaptic gain
     Ai = 22;             % Inhibitory synaptic gain
     a1e = 100;           % Time constant for excitatory population
@@ -52,8 +51,8 @@ function [acc,decision_reaction_times,error_reaction_times,decision_trial_indice
 
     tampa = 5/1000;      %Time constant
     f = 3;               %End time of simulation    
-decision_boundaries1=0.01;   %Decision threshold
-    %decision_boundaries1=0.003;
+decision_boundaries1=0.01;     % Decision boundary for classification
+  
   
     % Time vector
     t = linspace(0, 4, 4*fs);
