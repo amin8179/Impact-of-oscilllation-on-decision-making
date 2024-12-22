@@ -48,7 +48,7 @@ function [acc,decision_reaction_times,error_reaction_times,decision_trial_indice
 
 
     tampa = 5/1000;      %Time constant
-    f = 3;               %End time of simulation    
+    f = 3;               %End time of stimulation    
 decision_boundaries1=0.01;     % Decision boundary for classification
   
   
@@ -56,7 +56,7 @@ decision_boundaries1=0.01;     % Decision boundary for classification
     t = linspace(0, 4, 4*fs);
 
     % Parameters for Gaussian bumps
-    b = 1;               % Center of the Gaussian bump
+    b = 1;               %Start time of stimulation    
     c = 0.005;           % Width of the Gaussian bump
 
     X0 = zeros(1, 30);   % Initial state vector for the model (30 state variables)
@@ -69,9 +69,6 @@ decision_boundaries1=0.01;     % Decision boundary for classification
     avg_error_rts = [];
     std_decision_rts = [];
     std_error_rts = [];
-
-    % Maximum time for stimuli
-    tmax = 5;
 
     % Generate external sine wave inputs with phase shift
     y1 = a2 .* sin(2 .* pi .* f2 .* t);  % Sine wave inputs to column 1
@@ -144,8 +141,8 @@ decision_boundaries1=0.01;     % Decision boundary for classification
             output1_EEG(trial, :) = X(:, 2)' - X(:, 3)' + X(:, 7)';
             output2_EEG(trial, :) = X(:, 17)' - X(:, 18)' + X(:, 22)';
 
-        X1=X(:, 1)';
-        X2=X(:, 15)';
+        X1=X(:, 1)';    %EPSP of neuron e1 in column 1
+        X2=X(:, 15)';  %EPSP of neuron e1 in column 2
 
         X1=X1';
         X2=X2';
@@ -216,8 +213,8 @@ decision_boundaries1=0.01;     % Decision boundary for classification
             for i = 1:length(t) - 1
                 X(i + 1, :) = X(i, :) + dt * model33(X(i, :), i, bump1, bump2, y1, y2, noise_amp, tampa, Ae, Ai, a1e, a1i, cL21, cL12, cLi21, cLi12, c1, c2, c3, c4, c5, c6, c7);
             end
-            x22 = X(:, 1);
-            x177 = X(:, 15);
+            x22 = X(:, 1);  %EPSP of neuron e1 in column 1
+            x177 = X(:, 15); %EPSP of neuron e1 in column 2
 
             x2 = x22;
             x17 = x177;
