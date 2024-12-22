@@ -7,7 +7,7 @@ This project simulates neural decision-making processes using two different netw
 **File Descriptions**
 
 **1. fsm_A.m **
-This script simulates Network A. The function fsm_A runs a neural decision-making model over multiple trials, simulating the activity of two interconnected neural populations. The inputs include Gaussian bumps and sine waves with various phase shifts. Key outputs include decision and error reaction times, accuracy, and other relevant neural signals.
+This script simulates Network A. The function fsm_A runs a neural decision-making model over multiple trials, simulating the activity of two interconnected neural populations. The inputs include Gaussian bumps and sine waves with various phase shifts. Key outputs include correct and error decision times, accuracy, and other relevant neural signals.
 
 Inputs:
 num_trials: Number of trials for the simulation.
@@ -61,25 +61,11 @@ Differential Equations: Represent the change in neural activity over time.
 
 
 
-
-**6. movingAverage.m (​(movingAverage))**
-This file defines the movingAverage function, which calculates the moving average of the input data over a specified window size. It smooths the data for easier trend analysis during classification of trials.
-
-Inputs:
-
-data: The input data vector.
-windowSize: Size of the moving average window.
-Outputs:
-
-mav: The moving average of the input data.
-
-
-
 How to Run the Simulations
 Ensure all files are in the same directory.
 Edit simulation parameters in main_A.m or main_B.m to fit your needs. Modify variables like num_trials, fs, a_values, and phi to explore different setups.
 Run main_A.m or main_B.m from the MATLAB environment to execute the simulations. The script will automatically call fsm_A.m or fsm_B.m to handle the trial-by-trial simulations.
-Analyze outputs: After running, the reaction times, accuracy metrics, and other outputs will be stored in the specified variables for further analysis.
+Analyze outputs: After running, the decision times, accuracy metrics, and other outputs will be stored in the specified variables for further analysis.
 
 
 
@@ -91,9 +77,9 @@ The model33 and movingAverage functions must be present in the working directory
 
 
 Notes
-Ensure that the functions model33.m and movingAverage.m are available, as they are essential for simulating neural activity and processing the outputs.
+Ensure that the functions model33.m is available, as it is essential for simulating neural activity and processing the outputs.
 Adjust the decision_boundary and noise parameters to suit different decision-making scenarios.
-The moving average window size (k) is set to 100 by default but can be adjusted to better fit your data.
+
 By using these files, you can simulate how neural populations respond to varying inputs, analyze decision and error trials, and explore neural decision-making mechanisms.
 
 
