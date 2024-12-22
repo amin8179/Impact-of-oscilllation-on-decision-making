@@ -6,7 +6,7 @@ This project simulates neural decision-making processes using two different netw
 
 **File Descriptions**
 
-**1. fsm_A.m **
+**1. fsm_A.m**
 This script simulates Network A. The function fsm_A runs a neural decision-making model over multiple trials, simulating the activity of two interconnected neural populations. The inputs include Gaussian bumps and sine waves with various phase shifts. Key outputs include correct and error decision times, accuracy, and other relevant neural signals.
 
 Inputs:
@@ -39,8 +39,8 @@ Key parameters:
 num_trials = 3000: Number of trials per simulation.
 fs = 1000: Sampling frequency.
 decision_boundary1 = 0.026: Threshold for decision-making.
-a_values = 0.1:0.025:0.35: Range of evidence quality values.
-phi = 0:pi/4:pi: Phase differences for the sine wave inputs.
+a_values1 = [0.6:0.1/10:0.8];    % Amplitude of stimulus inputs to column 1
+a_values2 = [0.6:(-0.1)/10:0.4]; % Amplitude of stimulus inputs to column 2
 
 
 **4. main_B.m** 
