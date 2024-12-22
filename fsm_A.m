@@ -50,9 +50,9 @@ function [acc,decision_reaction_times,error_reaction_times,decision_trial_indice
 
 
 
-    tampa = 5/1000;
-    f = 3;
-decision_boundaries1=0.01;
+    tampa = 5/1000;      %Time constant
+    f = 3;               %End time of simulation    
+decision_boundaries1=0.01;   %Decision threshold
     %decision_boundaries1=0.003;
   
     % Time vector
