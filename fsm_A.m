@@ -34,15 +34,13 @@ function [acc,decision_reaction_times,error_reaction_times,decision_trial_indice
     cL12 = 0.7;            % Coupling from population 1 to 2
     cLi21 = 30;          % Inhibitory coupling from 2 to 1
     cLi12 = 30;          % Inhibitory coupling from 1 to 2
-    c1 =0.1;            % Coupling parameters (unspecified)
+    c1 =0.1;            % Coupling parameters 
     c2 = 0.1;
     c3 = 8;
     c4 = 5;
     c5 = 0.3;
     c6 = 1;
     c7 = 105;
-    I0E1 = 0.3255;       % Baseline input current for population 1
-    I0E2 = 0.3255;       % Baseline input current for population 2
     noise_amp = 2;      % Amplitude of noise
 
 
@@ -76,8 +74,8 @@ decision_boundaries1=0.01;     % Decision boundary for classification
     tmax = 5;
 
     % Generate external sine wave inputs with phase shift
-    y1 = a2 .* sin(2 .* pi .* f2 .* t);  % Sine wave with phase shift
-    y2 = a2 .* sin(2 .* pi .* f2 .* t+ phi);        % Sine wave without phase shift
+    y1 = a2 .* sin(2 .* pi .* f2 .* t);  % Sine wave inputs to column 1
+    y2 = a2 .* sin(2 .* pi .* f2 .* t+ phi);       % Sine wave inputs to column 2
 
     % Loop over different 'a' values (here, only one value a1)
   a_values = (a1);
