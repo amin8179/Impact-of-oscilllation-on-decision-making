@@ -42,7 +42,7 @@ function [acc,decision_reaction_times,error_reaction_times,decision_trial_indice
     c5 = 50;
     c6 = 0.1;
     c7 = 31.5;
-    noise_amp = 2;      % Amplitude of noise
+    noise_amp = 1;      % Amplitude of noise
 
 
 
