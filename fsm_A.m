@@ -27,37 +27,40 @@ function [acc,decision_reaction_times,error_reaction_times,decision_trial_indice
     %   o1_e1, o2_e1                 - Outputs from specific neurons in the model
     %   input_1, input_2             - Input stimuli used in the simulation
 
+  
     Ae = 3.25;           % Excitatory synaptic gain
     Ai = 22;             % Inhibitory synaptic gain
-    a1e = 100;           % 1/Time constant for excitatory population
-    a1i = 2;             % 1/Time constant for inhibitory population
+    a1e = 100;           % Time constant for excitatory population
+    a1i = 2;             % Time constant for inhibitory population
     cL21 = 0.7;            % Coupling from population 2 to 1
     cL12 = 0.7;            % Coupling from population 1 to 2
     cLi21 = 30;          % Inhibitory coupling from 2 to 1
     cLi12 = 30;          % Inhibitory coupling from 1 to 2
-    c1 =0.1;            % Coupling parameters (intrinsic connections)
+    c1 =0.1;            % Coupling parameters (unspecified)
     c2 = 0.1;
     c3 = 8;
     c4 = 5;
     c5 = 0.3;
     c6 = 1;
     c7 = 105;
+    I0E1 = 0.3255;       % Baseline input current for population 1
+    I0E2 = 0.3255;       % Baseline input current for population 2
     noise_amp = 2;      % Amplitude of noise
 
 
 
 
 
-    tampa = 5/1000;      %Time constant
-    f = 3;               %End time of stimulation    
-decision_boundaries1=0.01;     % Decision boundary for classification
-  
+    tampa = 5/1000;
+    f = 3;
+decision_boundaries1=0.01;
+    %decision_boundaries1=0.003;
   
     % Time vector
     t = linspace(0, 4, 4*fs);
 
     % Parameters for Gaussian bumps
-    b = 1;               %Start time of stimulation    
+    b = 1;               % Center of the Gaussian bump
     c = 0.005;           % Width of the Gaussian bump
 
     X0 = zeros(1, 30);   % Initial state vector for the model (30 state variables)
@@ -71,11 +74,14 @@ decision_boundaries1=0.01;     % Decision boundary for classification
     std_decision_rts = [];
     std_error_rts = [];
 
-    % Generate external sine wave inputs with phase shift
-    y1 = a2 .* sin(2 .* pi .* f2 .* t);  % Sine wave inputs to column 1
-    y2 = a2 .* sin(2 .* pi .* f2 .* t+ phi);       % Sine wave inputs to column 2
+    % Maximum time for stimuli
+    tmax = 5;
 
-    % Loop over different 'a' values 
+    % Generate external sine wave inputs with phase shift
+    y1 = a2 .* sin(2 .* pi .* f2 .* t);  % Sine wave with phase shift
+    y2 = a2 .* sin(2 .* pi .* f2 .* t+ phi);        % Sine wave without phase shift
+
+    % Loop over different 'a' values (here, only one value a1)
   a_values = (a1);
   a1_values = (a3);
 
@@ -102,7 +108,7 @@ decision_boundaries1=0.01;     % Decision boundary for classification
         decay2(t < f) = 0;
         bump2 = max([rise2; sustain2; decay2]);
 
-        % Initialize lists to store trial indices and decision times
+        % Initialize lists to store trial indices and reaction times
         decision_trial_indices = [];
         error_trial_indices = [];
         non_decision_trial_indices = [];
@@ -142,8 +148,8 @@ decision_boundaries1=0.01;     % Decision boundary for classification
             output1_EEG(trial, :) = X(:, 2)' - X(:, 3)' + X(:, 7)';
             output2_EEG(trial, :) = X(:, 17)' - X(:, 18)' + X(:, 22)';
 
-        X1=X(:, 1)';    %EPSP of neuron e1 in column 1
-        X2=X(:, 15)';  %EPSP of neuron e1 in column 2
+        X1=X(:, 1)';
+        X2=X(:, 15)';
 
         X1=X1';
         X2=X2';
@@ -155,10 +161,12 @@ decision_boundaries1=0.01;     % Decision boundary for classification
         x2 = X1(start_idx:end_idx + 1,1);
         x17 = X2(start_idx:end_idx + 1,1);
 
-        % Classify the trials
+        % Determine trends and classify the trial
+
 
         % Classification logic as per Python code
-
+      
+            % Both increasing
             if max(x2) >= max(x17) && abs(max(abs(x2)) - max(abs(x17))) >= decision_boundaries1
                 decision_trial_indices = [decision_trial_indices, trial];
             elseif max(x17) >= max(x2) && abs(max(abs(x17)) - max(abs(x2))) >= decision_boundaries1
@@ -173,24 +181,24 @@ decision_boundaries1=0.01;     % Decision boundary for classification
         error_trial_indicesa = error_trial_indices;
         non_decision_trial_indicesa = non_decision_trial_indices;
 
-        % Calculate decision times for correct trials
+        % Calculate reaction times for decision trials
         for trial_idx = 1:length(decision_trial_indices)
             trial = decision_trial_indices(trial_idx);
             rng(trial);
 
-            % Re-simulate the trial to get accurate decision times
+            % Re-simulate the trial to get accurate reaction times
             X = zeros(length(t), length(X0));
             X(1, :) = X0;
             for i = 1:length(t) - 1
                 X(i + 1, :) = X(i, :) + dt * model33(X(i, :), i, bump1, bump2, y1, y2, noise_amp, tampa, Ae, Ai, a1e, a1i, cL21, cL12, cLi21, cLi12, c1, c2, c3, c4, c5, c6, c7);
             end
-            x22 = X(:, 1);  %EPSP of neuron e1 in column 1
-            x177 = X(:, 15);%EPSP of neuron e1 in column 2 
+            x22 = X(:, 1);
+            x177 = X(:, 15);
 
             x2 = x22;
             x17 = x177;
 
-            % Find the decision time when x2 crosses the decision boundary
+            % Find the reaction time when x2 crosses the decision boundary
             rt_indices = find(x2 > decision_boundary, 1, 'first');
             if ~isempty(rt_indices)
                 first_rt = t(rt_indices);
@@ -203,24 +211,24 @@ decision_boundaries1=0.01;     % Decision boundary for classification
             end
         end
 
-        % Calculate decision times for error trials
+        % Calculate reaction times for error trials
         for trial_idx = 1:length(error_trial_indices)
             trial = error_trial_indices(trial_idx);
             rng(trial);
 
-            % Re-simulate the trial to get accurate decision times
+            % Re-simulate the trial to get accurate reaction times
             X = zeros(length(t), length(X0));
             X(1, :) = X0;
             for i = 1:length(t) - 1
                 X(i + 1, :) = X(i, :) + dt * model33(X(i, :), i, bump1, bump2, y1, y2, noise_amp, tampa, Ae, Ai, a1e, a1i, cL21, cL12, cLi21, cLi12, c1, c2, c3, c4, c5, c6, c7);
             end
-            x22 = X(:, 1);  %EPSP of neuron e1 in column 1
-            x177 = X(:, 15); %EPSP of neuron e1 in column 2
+            x22 = X(:, 1);
+            x177 = X(:, 15);
 
             x2 = x22;
             x17 = x177;
 
-            % Find the decision time when x17 crosses the decision boundary
+            % Find the reaction time when x17 crosses the decision boundary
             rt_indices = find(x17 > decision_boundary, 1, 'first');
             if ~isempty(rt_indices)
                 first_rt = t(rt_indices);
@@ -233,7 +241,7 @@ decision_boundaries1=0.01;     % Decision boundary for classification
             end
         end
 
-        % Calculate average decision times and standard deviations
+        % Calculate average reaction times and standard deviations
         if ~isempty(decision_reaction_times)
             avg_decision_rt = mean(decision_reaction_times, 'omitnan');
             std_decision_rt = std(decision_reaction_times, 'omitnan') / sqrt(length(decision_reaction_times));
@@ -250,7 +258,7 @@ decision_boundaries1=0.01;     % Decision boundary for classification
             std_error_rt = NaN;
         end
 
-        % Store the decision times and accuracies
+        % Store the reaction times and accuracies
         avg_decision_rts(a_idx) = avg_decision_rt;
         avg_error_rts(a_idx) = avg_error_rt;
         std_decision_rts(a_idx) = std_decision_rt;
@@ -260,5 +268,4 @@ decision_boundaries1=0.01;     % Decision boundary for classification
         acc(a_idx) = (length(decision_trial_indices)) / (length(decision_trial_indices) + length(error_trial_indices)) * 100;
     end
 end
-
 % Note: The functions 'model33' is assumed to be defined elsewhere in your codebase.
